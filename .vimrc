@@ -29,6 +29,7 @@ if has("gui_running")
 
     let &termencoding=&encoding
 
+
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 language messages zh_CN.utf-8
@@ -51,7 +52,12 @@ syntax on
 " let g:python3_host_prog="/usr/local/bin/python3"
 " ===============================================================
 " plug setting 
-call plug#begin('~/Dropbox/config/vim/.vim/bundle')
+if has("mac")
+    let t:pluginfolder='~/.vim/bundle'
+elseif has ("win32")
+    let t:pluginfolder='~/AppData/Local/nvim/.vim/bundle'
+endif 
+call plug#begin(t:pluginfolder)
 "
 " Plugins 
 " }}}
