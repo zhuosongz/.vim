@@ -1,0 +1,372 @@
+\documentclass[a4paper,11pt,draft]{article}
+
+%Packages
+\usepackage[T1]{fontenc} % fonts have 256 characters instead of 128
+\usepackage[utf8]{inputenc} % input file can use UTF8, e.g. ö is recognised
+\usepackage[english]{babel}
+\usepackage{geometry}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathrsfs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{paralist}
+\usepackage[shortlabels]{enumitem}
+\usepackage{textcase} % defines '\MakeTextUppercase'
+\usepackage{filemod} % '\moddate' returns the last mod date of the file
+\usepackage[longnamesfirst]{natbib}
+\usepackage{titlesec} % Used to redefine format of section heading
+\usepackage{etoolbox} % Use '\AfterEndEnvironment' to avoid indent after theorems
+
+\usepackage{showlabels}
+
+\RequirePackage[dvipsnames]{xcolor}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{framed}
+\usepackage{multirow}
+\usepackage{listings}
+\tcbuselibrary{most}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Settings for the packages 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% -------------------------
+%% Setting for the enumitem: 
+%% -------------------------
+\newlist{condition}{enumerate}{10}
+\setlist[condition]{label*=({A}\arabic*)}
+\crefname{conditioni}{condition}{conditions}
+\Crefname{conditioni}{Condition}{Conditions}
+
+
+\newlist{condition2}{enumerate}{10}
+\setlist[condition2]{label*=(\arabic{section}.\arabic{subsection}.\roman*)}
+\crefname{condition2i}{condition}{conditions}
+\Crefname{condition2i}{Condition}{Conditions}
+
+
+\newlist{condition3}{enumerate}{10}
+\setlist[condition3]{label*=({B}\arabic*)}
+\crefname{condition3i}{condition}{conditions}
+\Crefname{condition3i}{Condition}{Conditions}
+
+%% -------------------------
+%% Setting for the tcolorbox
+%% -------------------------
+\colorlet{shadecolor}{orange!20}
+\newtcolorbox{mybox}[1]{colback=red!5!white,
+colframe=red!75!black,fonttitle=\bfseries,
+title=#1}
+
+
+%% -------------------------
+%% Settings for the cleveref
+%% -------------------------
+\newcommand{\crefrangeconjunction}{--}
+\crefname{equation}{}{}
+\crefformat{equation}{(#2#1#3)}
+\crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+
+\crefname{page}{p.}{pp.}
+
+
+
+
+\makeatletter
+
+%set the default cite command
+\def\cite{\citet}
+
+% AMS Math Setup
+
+\numberwithin{equation}{section}
+\allowdisplaybreaks
+
+% After theorems and proofs don't indent
+\def\@noindentfalse{\global\let\if@noindent\iffalse}%
+\def\@noindenttrue {\global\let\if@noindent\iftrue}%
+\def\@aftertheorem{%
+\@noindenttrue%
+\everypar{%
+\if@noindent%
+\@noindentfalse\clubpenalty\@M\setbox\z@\lastbox%
+\else%
+\clubpenalty \@clubpenalty\everypar{}%
+\fi}}%
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\AfterEndEnvironment{theorem}{\@aftertheorem}
+\newtheorem{definition}[theorem]{Definition}
+\AfterEndEnvironment{definition}{\@aftertheorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\AfterEndEnvironment{lemma}{\@aftertheorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\AfterEndEnvironment{corollary}{\@aftertheorem}
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\AfterEndEnvironment{remark}{\@aftertheorem}
+\newtheorem{example}[theorem]{Example}
+\AfterEndEnvironment{example}{\@aftertheorem}
+    
+\AfterEndEnvironment{proof}{\@aftertheorem}
+
+
+% Redefine section headers
+\titleformat{name=\section}
+{\center\small\sc}{\thesection\kern1em}{0pt}{\MakeTextUppercase}
+\titleformat{name=\section, numberless}
+{\center\small\sc}{}{0pt}{\MakeTextUppercase}
+
+\titleformat{name=\subsection}
+{\bf\mathversion{bold}}{\thesubsection\kern1em}{0pt}{}
+\titleformat{name=\subsection, numberless}
+{\bf\mathversion{bold}}{}{0pt}{}
+
+\titleformat{name=\subsubsection}
+{\normalsize\itshape}{\thesubsubsection\kern1em}{0pt}{}
+\titleformat{name=\subsubsection, numberless}
+{\normalsize\itshape}{}{0pt}{}
+
+
+%%% Define shorter display equations commands
+\def\be#1{\begin{equation*}#1\end{equation*}}
+\def\ben#1{\begin{equation}#1\end{equation}}
+\def\bes#1{\begin{equation*}\begin{split}#1\end{split}\end{equation*}}
+\def\besn#1{\begin{equation}\begin{split}#1\end{split}\end{equation}}
+\def\bs#1{\begin{split}#1\end{split}}
+\def\ba#1{\begin{align*}#1\end{align*}}
+\def\ban#1{\begin{align}#1\end{align}}
+\def\bg#1{\begin{gather*}#1\end{gather*}}
+\def\bgn#1{\begin{gather}#1\end{gather}}
+\setlength{\multlinegap}{1em}
+\def\bm#1{\begin{multline*}#1\end{multline*}}
+\def\bmn#1{\begin{multline}#1\end{multline}}
+
+% Define \note 
+\def\note#1{\par\smallskip%
+\noindent\kern-0.01\hsize%
+\setlength\fboxrule{0pt}\fbox{\setlength\fboxrule{0.5pt}\fbox{%
+\llap{$\boldsymbol\Longrightarrow$ }%
+\vtop{\hsize=0.98\hsize\parindent=0cm\small\rm #1}%
+\rlap{$\enskip\,\boldsymbol\Longleftarrow$}
+}}%
+}
+
+%%% Define bracket commands
+\usepackage{delimset}
+\def\given{\mskip 0.5mu plus 0.25mu\vert\mskip 0.5mu plus 0.15mu}
+\newcounter{bracketlevel}% 
+\def\@bracketfactory#1#2#3#4#5#6{%
+\expandafter\def\csname#1\endcsname##1{%
+\global\advance\c@bracketlevel 1\relax%
+\global\expandafter\let\csname @middummy\alph{bracketlevel}\endcsname\given%
+\global\def\given{\mskip#5\csname#4\endcsname\vert\mskip#6}\csname#4l\endcsname#2##1\csname#4r\endcsname#3%
+\global\expandafter\let\expandafter\given\csname @middummy\alph{bracketlevel}\endcsname%
+\global\advance\c@bracketlevel -1\relax%
+}%
+}
+\def\bracketfactory#1#2#3{%
+\@bracketfactory{#1}{#2}{#3}{relax}{0.5mu plus 0.25mu}{0.5mu plus 0.15mu}
+\@bracketfactory{b#1}{#2}{#3}{big}{1mu plus 0.25mu minus 0.25mu}{0.6mu plus 0.15mu minus 0.15mu}
+\@bracketfactory{bb#1}{#2}{#3}{Big}{2.4mu plus 0.8mu minus 0.8mu}{1.8mu plus 0.6mu minus 0.6mu}
+\@bracketfactory{bbb#1}{#2}{#3}{bigg}{3.2mu plus 1mu minus 1mu}{2.4mu plus 0.75mu minus 0.75mu}
+\@bracketfactory{bbbb#1}{#2}{#3}{Bigg}{4mu plus 1mu minus 1mu}{3mu plus 0.75mu minus 0.75mu}
+}
+\bracketfactory{clc}{\lbrace}{\rbrace}
+\bracketfactory{clr}{(}{)}
+\bracketfactory{cls}{[}{]}
+\bracketfactory{abs}{\lvert}{\rvert}
+\bracketfactory{norm}{\Vert}{\Vert}
+\bracketfactory{floor}{\lfloor}{\rfloor}
+\bracketfactory{ceil}{\lceil}{\rceil}
+\bracketfactory{angle}{\langle}{\rangle}
+
+% Fix spacing problems with \left and \right 
+% Note: ()^2 is now typeset properly
+\let\original@left\left
+\let\original@right\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\original@left}
+\renewcommand{\right}{\aftergroup\egroup\original@right}
+
+
+% Define font commands
+\newcounter{ctr}\loop\stepcounter{ctr}\edef\X{\@Alph\c@ctr}%
+\expandafter\edef\csname s\X\endcsname{\noexpand\mathscr{\X}}
+\expandafter\edef\csname c\X\endcsname{\noexpand\mathcal{\X}}
+\expandafter\edef\csname b\X\endcsname{\noexpand\boldsymbol{\X}}
+\expandafter\edef\csname I\X\endcsname{\noexpand\mathbb{\X}}
+\ifnum\thectr<26\repeat
+
+% Define macros
+\let\@IE\IE\let\IE\undefined
+\newcommand{\IE}{\mathop{{}\@IE}\mathopen{}}
+\let\@IP\IP\let\IP\undefined
+\newcommand{\IP}{\mathop{{}\@IP}}
+\newcommand{\Var}{\mathop{\mathrm{Var}}}
+\newcommand{\Cov}{\mathop{\mathrm{Cov}}}
+\newcommand{\bigo}{\mathop{{}\mathrm{O}}\mathopen{}}
+\newcommand{\lito}{\mathop{{}\mathrm{o}}\mathopen{}}
+\newcommand{\law}{\mathop{{}\sL}\mathopen{}}
+
+
+\newcommand{\R}{\mathbf{R}}  % The real numbers.
+\newcommand{\ML}{\MoveEqLeft}         % Beginning of align environments. 
+\newcommand{\ignore}[1]{}{}
+\newcommand{\lbl}{\label}
+\newcommand{\nn}{}
+\newcommand{\tcref}[1]{\texorpdfstring{\cref{#1}}{}} 
+
+\DeclareMathOperator{\dist}{dist} % The distance.
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\ep}[2][]{\IE_{#1}\left( #2 \right)}
+\newcommand{\epb}[2][]{\IE_{#1}\bigl( #2 \bigr)}
+\newcommand{\epB}[2][]{\IE_{#1}\Bigl( #2 \Bigr)}
+\newcommand{\epbb}[2][]{\IE_{#1}\biggl( #2 \biggr)}
+\newcommand{\epBB}[2][]{\IE_{#1}\Biggl( #2 \Biggr)}
+\newcommand{\epbc}[2][]{\IE_{#1}\bigl\{ #2 \bigr\}}
+\newcommand{\epBc}[2][]{\IE_{#1}\Bigl\{ #2 \Bigr\}}
+\newcommand{\epbbc}[2][]{\IE_{#1}\biggl\{ #2 \biggr\}}
+\newcommand{\epBBc}[2][]{\IE_{#1}\Biggl\{ #2 \Biggr\}}
+\newcommand{\epbk}[2][]{\IE_{#1}\bigl[ #2 \bigr]}
+\newcommand{\epBk}[2][]{\IE_{#1}\Bigl[ #2 \Bigr]}
+\newcommand{\epbbk}[2][]{\IE_{#1}\biggl[ #2 \biggr]}
+\newcommand{\epBBk}[2][]{\IE_{#1}\Biggl[ #2 \Biggr]}
+\newcommand{\epbv}[2][]{\IE_{#1}\bigl\lvert #2 \bigr\rvert}
+\newcommand{\epBv}[2][]{\IE_{#1}\Bigl\lvert #2 \Bigr\rvert}
+\newcommand{\epbbv}[2][]{\IE_{#1}\biggl\lvert #2 \biggr\rvert}
+\newcommand{\epBBv}[2][]{\IE_{#1}\Biggl\lvert #2 \Biggr\rvert}
+\newcommand{\epbV}[2][]{\IE_{#1}\bigl\lVert #2 \bigr\rVert}
+\newcommand{\epBV}[2][]{\IE_{#1}\Bigl\lVert #2 \Bigr\rVert}
+\newcommand{\epbbV}[2][]{\IE_{#1}\biggl\lVert #2 \biggr\rVert}
+\newcommand{\epBBV}[2][]{\IE_{#1}\Biggl\lVert #2 \Biggr\rVert}
+\newcommand{\conep}[3][]{\IE_{#1}\left( #2 \,\middle\vert\, #3  \right)}
+\newcommand{\conepb}[3][]{\IE_{#1}\bigl( #2 \bigm\vert #3  \bigr)}
+\newcommand{\conepB}[3][]{\IE_{#1}\Bigl( #2 \Bigm\vert #3  \Bigr)}
+\newcommand{\conepbb}[3][]{\IE_{#1}\biggl( #2\biggm\vert #3  \biggr)}
+\newcommand{\conepBB}[3][]{\IE_{#1}\Biggl( #2 \Bigm\vert #3  \Biggr)}
+\newcommand{\conepc}[3][]{\IE_{#1}\left\{ #2 \,\middle\vert\, #3  \right\}}
+\newcommand{\conepbc}[3][]{\IE_{#1}\bigl\{ #2 \bigm\vert #3  \bigr\}}
+\newcommand{\conepBc}[3][]{\IE_{#1}\Bigl\{ #2 \Bigm\vert #3  \Bigr\}}
+\newcommand{\conepbbc}[3][]{\IE_{#1}\biggl\{ #2\biggm\vert #3  \biggr\}}
+\newcommand{\conepBBc}[3][]{\IE_{#1}\Biggl\{ #2 \Bigm\vert #3  \Biggr\}}
+\newcommand{\conepk}[3][]{\IE_{#1}\left[ #2 \,\middle\vert\, #3  \right]}
+\newcommand{\conepbk}[3][]{\IE_{#1}\bigl[ #2 \bigm\vert #3  \bigr]}
+\newcommand{\conepBk}[3][]{\IE_{#1}\Bigl[ #2 \Bigm\vert #3  \Bigr]}
+\newcommand{\conepbbk}[3][]{\IE_{#1}\biggl[ #2\biggm\vert #3  \biggr]}
+\newcommand{\conepBBk}[3][]{\IE_{#1}\Biggl[ #2 \Bigm\vert #3  \Biggr]}
+
+
+% Define accents
+\def\^#1{\relax\ifmmode {\mathaccent"705E #1} \else {\accent94 #1} \fi}
+\def\~#1{\relax\ifmmode {\mathaccent"707E #1} \else {\accent"7E #1} \fi}
+\def\*#1{\relax#1^\ast}
+\edef\-#1{\relax\noexpand\ifmmode {\noexpand\bar{#1}} \noexpand\else \-#1\noexpand\fi}
+\def\>#1{\vec{#1}}
+\def\.#1{\dot{#1}}
+\def\wh#1{\widehat{#1}}
+\def\wt#1{\widetilde{#1}}
+\def\atop{\@@atop}
+
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\phi}{\varphi}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\D}{\Delta}
+\newcommand{\N}{\mathop{{}\mathrm{N}}}
+\newcommand{\eq}{\eqref}
+\newcommand{\I}{\mathop{{}\mathrm{I}}\mathopen{}}
+\newcommand{\dtv}{\mathop{d_{\mathrm{TV}}}\mathopen{}}
+\newcommand{\dloc}{\mathop{d_{\mathrm{loc}}}\mathopen{}}
+\newcommand{\dw}{\mathop{d_{\mathrm{W}}}\mathopen{}}
+\newcommand{\dk}{\mathop{d_{\mathrm{K}}}\mathopen{}}
+\newcommand\indep{\protect\mathpalette{\protect\@indep}{\perp}}
+\def\@indep#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newcommand{\hence}{\mathrel{\Rightarrow}}
+\newcommand{\toinf}{\to\infty}
+\newcommand{\tozero}{\to0}
+\newcommand{\longto}{\longrightarrow}
+\def\tsfrac#1#2{{\textstyle\frac{#1}{#2}}}
+
+% define \moddate
+\def\parsetime#1#2#3#4#5#6{#1#2:#3#4}
+\def\parsedate#1:20#2#3#4#5#6#7#8+#9\empty{20#2#3-#4#5-#6#7 \parsetime #8}
+\def\moddate{\expandafter\parsedate\pdffilemoddate{\jobname.tex}\empty}
+
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colors 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\red}{\color{red}}
+\newcommand{\blue}{\color{blue}}
+
+
+\newcommand{\dd}{\mathop{}\!\mathrm{d}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Spaces settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \renewcommand{\baselinestretch}{1.3}
+
+\setlength{\arraycolsep}{2pt}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Redefinition 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{equ}
+{\begin{equation} \begin{aligned}}
+{\end{aligned} \end{equation}}
+\AfterEndEnvironment{equ}{\noindent\ignorespaces}
+\def\cite{\citet*}
+\def\ref{\cref}
+
+
+\begin{document}
+
+\title{\sc\bf\large\MakeUppercase{Title}}
+\author{\sc Author 1 \and \sc Author 2}
+
+\date{\itshape Affiliation 1 and Affiliation 2}
+
+\maketitle
+
+\section{Introduction}
+
+
+\section*{Acknowledgements}
+
+\setlength{\bibsep}{0.5ex}
+\def\bibfont{\small}
+
+%\bibliographystyle{mynatbib}
+%\bibliography{literature}
+
+\begin{thebibliography}{1}
+
+
+\end{thebibliography}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+

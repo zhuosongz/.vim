@@ -1,0 +1,15 @@
+This is TeXk, Version 3.14159265 (TeX Live 2019) (preloaded format=TEX)
+ restricted \write18 enabled.
+
+kpathsea: Running mktexfmt TEX.fmt
+mktexfmt: mktexfmt is using the following fmtutil.cnf files (in precedence order):
+mktexfmt:   /usr/local/texlive/2018/texmf-dist/web2c/fmtutil.cnf
+mktexfmt: mktexfmt is using the following fmtutil.cnf file for writing changes:
+mktexfmt:   /Users/zhuosongz/Library/texlive/2018/texmf-config/web2c/fmtutil.cnf
+mktexfmt [INFO]: writing formats under /Users/zhuosongz/Library/texlive/2018/texmf-var/web2c
+mktexfmt [INFO]: did not find entry for byfmt=TEX, skipped
+mktexfmt [INFO]: disabled formats: 5
+mktexfmt [INFO]: not selected formats: 53
+mktexfmt [INFO]: total formats: 58
+mktexfmt [INFO]: exiting with status 0
+I can't find the format file `TEX.fmt'!

@@ -1,0 +1,362 @@
+%% The following tells LaTeX that we are using the 
+%% style file amsart.cls (That is the AMS article style
+%%
+\documentclass{amsart}
+
+%% This has a default type size 10pt.  Other options are 11pt and 12pt
+%% This are set by replacing the command above by
+%% \documentclass[11pt]{amsart}
+%%
+%% or
+%%
+%% \documentclass[12pt]{amsart}
+%%
+
+%%
+%% Some mathematical symbols are not included in the basic LaTeX
+%% package.  Uncommenting the following makes more commands
+%% available. 
+%%
+
+%\usepackage{amssymb}
+
+%%
+%% The following is commands are used for importing various types of
+%% grapics.
+%% 
+
+%\usepackage{epsfig}  		% For postscript
+%\usepackage{epic,eepic}       % For epic and eepic output from xfig
+
+%%
+%% The following is very useful in keeping track of labels while
+%% writing.  The variant   \usepackage[notcite]{showkeys}
+%% does not show the labels on the \cite commands.
+%% 
+
+%\usepackageshowkeys}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+%\usepackage{cleveref}
+\usepackage[numbers]{natbib}
+\usepackage{fontenc}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+\usepackage{color}
+\RequirePackage[dvipsnames]{xcolor}
+\usepackage{mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[final,notref,notcite]{showkeys}
+\usepackage{framed}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{listings}
+\tcbuselibrary{most}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Settings for the packages 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% -------------------------
+%% Setting for the enumitem: 
+%% -------------------------
+\newlist{condition}{enumerate}{10}
+\setlist[condition]{label*=({A}\arabic*)}
+\crefname{conditioni}{condition}{conditions}
+\Crefname{conditioni}{Condition}{Conditions}
+
+
+\newlist{condition2}{enumerate}{10}
+\setlist[condition2]{label*=(\arabic{section}.\arabic{subsection}.\roman*)}
+\crefname{condition2i}{condition}{conditions}
+\Crefname{condition2i}{Condition}{Conditions}
+
+
+\newlist{condition3}{enumerate}{10}
+\setlist[condition3]{label*=({B}\arabic*)}
+\crefname{condition3i}{condition}{conditions}
+\Crefname{condition3i}{Condition}{Conditions}
+
+
+%% -------------------------
+%% Setting for the tcolorbox
+%% -------------------------
+\colorlet{shadecolor}{orange!20}
+\newtcolorbox{mybox}[1]{colback=red!5!white,
+colframe=red!75!black,fonttitle=\bfseries,
+title=#1}
+
+
+%% -------------------------
+%% Settings for the cleveref
+%% -------------------------
+\newcommand{\crefrangeconjunction}{--}
+\crefname{equation}{}{}
+\crefformat{equation}{(#2#1#3)}
+\crefrangeformat{equation}{(#3#1#4)--(#5#2#6)}
+
+\crefname{page}{p.}{pp.}
+
+
+
+%%%%
+%%%% The next few commands set up the theorem type environments.
+%%%% Here they are set up to be numbered section.number, but this can
+%%%% be changed.
+%%%%
+
+
+
+%%
+%% If some other type is need, say conjectures, then it is constructed
+%% by editing and uncommenting the following.
+%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]%[theorem]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma} [section]
+
+%%% 
+%%% The following gives definition type environments (which only differ
+%%% from theorem type invironmants in the choices of fonts).  The
+%%% numbering is still tied to the theorem counter.
+%%% 
+
+
+%%
+%% Again more of these can be added by uncommenting and editing the
+%% following. 
+%%
+
+%\newtheorem{note}[thm]{Note}
+
+
+%%% 
+%%% The following gives remark type environments (which only differ
+%%% from theorem type invironmants in the choices of fonts).  The
+%%% numbering is still tied to the theorem counter.
+%%% 
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+
+
+
+
+%%%
+%%% The following, if uncommented, numbers equations within sections.
+%%% 
+
+\numberwithin{equation}{section}
+
+
+%%%
+%%% The following show how to make definition (also called macros or
+%%% abbreviations).  For example to use get a bold face R for use to
+%%% name the real numbers the command is \mathbf{R}.  To save typing we
+%%% can abbreviate as
+
+\newcommand{\R}{\mathbf{R}}  % The real numbers.
+\newcommand{\ML}{\MoveEqLeft}         % Beginning of align environments. 
+\newcommand{\ignore}[1]{}{}
+\newcommand{\lbl}{\label}
+\newcommand{\nn}{}
+\newcommand{\tcref}[1]{\texorpdfstring{\cref{#1}}{}} 
+
+
+%%
+%% The comment after the defintion is not required, but if you are
+%% working with someone they will likely thank you for explaining your
+%% definition.  
+%%
+%% Now add you own definitions:
+%%
+
+%%%
+%%% Mathematical operators (things like sin and cos which are used as
+%%% functions and have slightly different spacing when typeset than
+%%% variables are defined as follows:
+%%%
+
+\DeclareMathOperator{\dist}{dist} % The distance.
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+
+
+
+%\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+
+\providecommand{\keywords}[1]{\textbf{\textit{Keywords:  }}  #1}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\Prob}{P}
+\renewcommand{\P}{\Prob}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov} 
+\DeclareMathOperator{\dom}{dom}
+\newcommand{\ep}[2][]{\E_{#1}\left( #2 \right)}
+\newcommand{\epb}[2][]{\E_{#1}\bigl( #2 \bigr)}
+\newcommand{\epB}[2][]{\E_{#1}\Bigl( #2 \Bigr)}
+\newcommand{\epbb}[2][]{\E_{#1}\biggl( #2 \biggr)}
+\newcommand{\epBB}[2][]{\E_{#1}\Biggl( #2 \Biggr)}
+\newcommand{\epbc}[2][]{\E_{#1}\bigl\{ #2 \bigr\}}
+\newcommand{\epBc}[2][]{\E_{#1}\Bigl\{ #2 \Bigr\}}
+\newcommand{\epbbc}[2][]{\E_{#1}\biggl\{ #2 \biggr\}}
+\newcommand{\epBBc}[2][]{\E_{#1}\Biggl\{ #2 \Biggr\}}
+\newcommand{\epbk}[2][]{\E_{#1}\bigl[ #2 \bigr]}
+\newcommand{\epBk}[2][]{\E_{#1}\Bigl[ #2 \Bigr]}
+\newcommand{\epbbk}[2][]{\E_{#1}\biggl[ #2 \biggr]}
+\newcommand{\epBBk}[2][]{\E_{#1}\Biggl[ #2 \Biggr]}
+\newcommand{\epbv}[2][]{\E_{#1}\bigl\lvert #2 \bigr\rvert}
+\newcommand{\epBv}[2][]{\E_{#1}\Bigl\lvert #2 \Bigr\rvert}
+\newcommand{\epbbv}[2][]{\E_{#1}\biggl\lvert #2 \biggr\rvert}
+\newcommand{\epBBv}[2][]{\E_{#1}\Biggl\lvert #2 \Biggr\rvert}
+\newcommand{\epbV}[2][]{\E_{#1}\bigl\lVert #2 \bigr\rVert}
+\newcommand{\epBV}[2][]{\E_{#1}\Bigl\lVert #2 \Bigr\rVert}
+\newcommand{\epbbV}[2][]{\E_{#1}\biggl\lVert #2 \biggr\rVert}
+\newcommand{\epBBV}[2][]{\E_{#1}\Biggl\lVert #2 \Biggr\rVert}
+\newcommand{\conep}[3][]{\E_{#1}\left( #2 \,\middle\vert\, #3  \right)}
+\newcommand{\conepb}[3][]{\E_{#1}\bigl( #2 \bigm\vert #3  \bigr)}
+\newcommand{\conepB}[3][]{\E_{#1}\Bigl( #2 \Bigm\vert #3  \Bigr)}
+\newcommand{\conepbb}[3][]{\E_{#1}\biggl( #2\biggm\vert #3  \biggr)}
+\newcommand{\conepBB}[3][]{\E_{#1}\Biggl( #2 \Bigm\vert #3  \Biggr)}
+\newcommand{\conepc}[3][]{\E_{#1}\left\{ #2 \,\middle\vert\, #3  \right\}}
+\newcommand{\conepbc}[3][]{\E_{#1}\bigl\{ #2 \bigm\vert #3  \bigr\}}
+\newcommand{\conepBc}[3][]{\E_{#1}\Bigl\{ #2 \Bigm\vert #3  \Bigr\}}
+\newcommand{\conepbbc}[3][]{\E_{#1}\biggl\{ #2\biggm\vert #3  \biggr\}}
+\newcommand{\conepBBc}[3][]{\E_{#1}\Biggl\{ #2 \Bigm\vert #3  \Biggr\}}
+\newcommand{\conepk}[3][]{\E_{#1}\left[ #2 \,\middle\vert\, #3  \right]}
+\newcommand{\conepbk}[3][]{\E_{#1}\bigl[ #2 \bigm\vert #3  \bigr]}
+\newcommand{\conepBk}[3][]{\E_{#1}\Bigl[ #2 \Bigm\vert #3  \Bigr]}
+\newcommand{\conepbbk}[3][]{\E_{#1}\biggl[ #2\biggm\vert #3  \biggr]}
+\newcommand{\conepBBk}[3][]{\E_{#1}\Biggl[ #2 \Bigm\vert #3  \Biggr]}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colors 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\red}{\color{red}}
+\newcommand{\blue}{\color{blue}}
+
+
+\newcommand{\dd}{\mathop{}\!\mathrm{d}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Spaces settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\baselinestretch}{1.3}
+
+\setlength{\arraycolsep}{2pt}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Redefinition 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{equ}
+{\begin{equation} \begin{aligned}}
+{\end{aligned} \end{equation}}
+\AfterEndEnvironment{equ}{\noindent\ignorespaces}
+\def\cite{\citet*}
+\def\ref{\cref}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% local definitions:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\inttd}{\int_{|t|\leq \delta} } 
+\newcommand{\intud}{\int_{|u|\leq \delta} } 
+\newcommand{\hatK}{\hat{K}} 
+\newcommand{\I}{I}
+\newcommand{\M}{\mathbf{M}}
+\newcommand{\D}{\mathbf{D}}
+\newcommand{\A}{\mathbf{A}}
+\newcommand{\expb}[1]{\exp \bigl( #1 \bigr) }
+\newcommand{\vertiii}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1 \right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}}
+
+\newcommand{\inti}{ \int_{\Ical}  }
+\newcommand{\intii}{ \iint_{\Ical^2}  }
+
+\renewcommand{\hat}{\widehat}
+
+
+
+%%
+%% This is the end of the preamble.
+%% 
+
+
+
+\begin{document}
+
+%%
+%% The title of the paper goes here.  Edit to your title.
+%%
+
+\title{Mathematical Theorems}
+
+%%
+%% Now edit the following to give your name and address:
+%% 
+
+\author{First Author}
+\address{University of \ldots}
+\email{email@email.com}
+\urladdr{www.google.com} % Delete if not wanted.
+
+%%
+%% If there is another author uncomment and edit the following.
+%%
+
+\author{Second Author}
+\address{Address}
+\email{email@email.com}
+\urladdr{www.google.com}
+
+%%
+%% If there are three of more authors they are added in the obvious
+%% way. 
+%%
+
+%%%
+%%% The following is for the abstract.  The abstract is optional and
+%%% if not used just delete, or comment out, the following.
+%%%
+
+\begin{abstract}
+Abstract here. 
+\end{abstract}
+
+%%
+%%  LaTeX will not make the title for the paper unless told to do so.
+%%  This is done by uncommenting the following.
+%%
+
+\maketitle
+
+%%
+%% LaTeX can automatically make a table of contents.  This is done by
+%% uncommenting the following:
+%%
+
+\tableofcontents
+
+%%
+%%  To enter text is easy.  Just type it.  A blank line starts a new
+%%  paragraph. 
+{{~default~}}
+
+
+\bibliographystyle{mybib3}
+%\setcitestyle{authoryear,open={((},close={))}}
+\bibliography{bibfull}
+
+
+\end{document}
+
+\bibliographystyle{plain}

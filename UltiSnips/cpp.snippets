@@ -1,0 +1,88 @@
+priority -50
+
+extends c 
+
+priority -49
+
+###########################################################################
+#			    Global functions 						  #
+###########################################################################
+
+global !p
+
+def write_docstring_args(arglist, snip):
+	args = str(arglist).split(',')
+
+	if len(args) > 1:
+		c = 0
+		for arg in args:
+			if c == 0: 
+				snip.rv += arg
+				c = 1
+			else:
+				snip += '*      : %s' % arg.strip()
+	else:
+		snip.rv = args[0]
+
+def write_docstring_args_rcpp(arglist, snip):
+	args = str(arglist).split(',')
+	for i in range(len(args)):
+		args[i] = args[i].strip()
+
+	
+
+	if len(args) > 1:
+		c = 0
+		for arg in args:
+			if c == 0:
+				arg_list = str(arg).split(" ")
+				#arg_new = arg_list[1] + " " + arg_list[0] 
+				arg_new = " ".join(arg_list[::-1])
+				snip.rv += arg_new
+				# snip.rv += arg
+				c = 1
+			else:
+				# arg_no_space = arg.strip() 
+				arg_list = str(arg).split(" ")
+				arg_nl = arg_list[::-1] 
+				arg_new = " ".join(arg_nl)
+
+				# arg_new = arg_list1[2] + " " + arg_list1[1]
+				#snip.rv += "//' @param %s" % arg_new 
+				#snip += "//' @param %s" % arg.strip() 
+				snip += "//' @param %s" % arg_new
+	else:
+		snip.rv = args[0]
+
+endglobal
+
+###########################################################################
+#			    TextMate Snippets				 						  #
+###########################################################################
+
+snippet inc "include files and headings" b
+	# include <RcppArmadillo.h>
+	using namespace Rcpp; 
+endsnippet
+
+snippet iffun "If command..." b
+if(${1:condition}){
+	$2
+}	// End of $1
+endsnippet
+
+snippet fnrc "Basic c++ doxygen function template" b
+//' ${4:brief}
+//'
+//' @param `!p write_docstring_args_rcpp(t[3],snip)`
+//'
+//' @return `!p snip.rv = t[1]`
+//'/
+//' @export
+//[[Rcpp::export()]]
+${1:ReturnType} ${2:FunctionName}(${3:param})
+{
+	${0:FunctionBody}
+}
+endsnippet
+
