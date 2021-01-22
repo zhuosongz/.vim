@@ -45,6 +45,11 @@ let g:vimtex_view_general_viewer = '/usr/local/bin/displayline'
 " let g:vimtex_view_method='skim'
 let g:vimtex_view_general_options = '-r @line @pdf @tex'
 let g:vimtex_view_general_options_latexmk = '-r'
+if has('win32')
+	let g:vimtex_view_general_viewer = 'SumatraPDF'
+	let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
+	let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+endif 
 " let g:tex_flavor='latex'
 
 
