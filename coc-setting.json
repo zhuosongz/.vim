@@ -7,5 +7,8 @@
   "suggest.timeout": 1000,
   "suggest.removeDuplicateItems": true,
   "coc.source.ultisnips.enable": false,
-  "coc.preferences.useQuickfixForLocations": true
+  "coc.preferences.useQuickfixForLocations": true,
+  "snippets.extends":{
+	"latex": ["tex","texmath"]
+  }
 }

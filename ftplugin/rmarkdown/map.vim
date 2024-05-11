@@ -38,27 +38,3 @@ nmap j gj
 nmap k gk
 
 imap <F1> <Nop>
-
-" Add custom mapping through vimtex#imaps#add_map
-call vimtex#imaps#add_map({
-	\ 'lhs' : 'vl',
-	\ 'rhs' : '\ell',
-	\ 'wrapper' : 'vimtex#imaps#wrap_math'
-	\})
-
-" Add custom mapping: #rX -> \mathrm{X}
-call vimtex#imaps#add_map({
-	\ 'lhs' : 'r',
-	\ 'rhs' : 'vimtex#imaps#style_math("mathrm")',
-	\ 'expr' : 1,
-	\ 'leader' : '#',
-	\ 'wrapper' : 'vimtex#imaps#wrap_math'
-	\})
-" add custom mapping: #s1 -> \mathds{1}
-call vimtex#imaps#add_map({
-	\ 'lhs' : 's',
-	\ 'rhs' : 'vimtex#imaps#style_math("mathds")',
-	\ 'expr' : 1,
-	\ 'leader' : '#',
-	\ 'wrapper' : 'vimtex#imaps#wrap_math'
-	\})

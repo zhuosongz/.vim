@@ -2,10 +2,7 @@ priority -50
 global !p
 texMathZones = ['texMath'+x for x in ['A', 'AS', 'B', 'BS', 'C',
 'CS', 'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS',
-'J', 'JS', 'K', 'KS', 'L', 'LI', 'LS', 'DS', 'TI', 'V', 'W', 'X',
-'Y', 'Z','RegionEnv','ZoneX','ZoneXX','ZoneEnv', 'ZoneLI',
-'ZoneLD',
-'ZoneTI', 'ZoneTD']]
+'J', 'JS', 'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z','RegionEnv','ZoneX','ZoneXX','ZoneEnv']] + ["VimwikiMath", "VimwikiEqIn"]
 
 texIgnoreMathZones = ['texMathTextArg','texRefArg']
 
@@ -24,22 +21,6 @@ def math():
         return first not in texIgnoreMathZoneIds
     except StopIteration:
         return False
-
-def create_row_placeholders(snip):
-    # retrieving single line from current string and treat it like tabstops
-    # count
-    placeholders_amount = int(snip.buffer[snip.line].strip())
-
-    # erase current line
-    snip.buffer[snip.line] = ''
-
-    # create anonymous snippet with expected content and number of tabstops
-    anon_snippet_body = ' & '.join(['$' + str(i+1)
-                                    for i in range(placeholders_amount)])
-
-    # expand anonymous snippet
-    snip.expand_anon(anon_snippet_body)
-
 endglobal
 
 
@@ -62,7 +43,7 @@ endsnippet
 
 context "math()"
 snippet ';2' "\sqrt{}" wrA
-\sqrt{$1}$0
+\sqrt{$1}$0 
 endsnippet
 
 context "math()"
@@ -82,17 +63,17 @@ endsnippet
 
 context "math()"
 snippet fr "\frac{}{}" w
-\frac{$1}{${2:holder}}$0
+\frac{$1}{$2}$0
 endsnippet
 
 context "math()" 
 snippet 'int' "\int" wr
-\int_{$1}^{${2:holder}}$0
+\int_{$1}^{$2}$0
 endsnippet
 
 context "math()" 
 snippet cpp "\conep{}" w
-\conep{$1}{${2:holder}}$0
+\conep{$1}{$2}$0
 endsnippet
 
 context "math()"
@@ -105,16 +86,16 @@ snippet today "Insert today"
 `date +%F`
 endsnippet
 
+context "math()" 
+snippet __ "_{}" iA
+_{$1}$0
+endsnippet
 
 context "math()" 
-snippet '\^ ' "^{}" irA
+snippet ^^ "^{}" iA
 ^{$1}$0
 endsnippet
 
-context "math()" 
-snippet '_ ' "_{}" irA
-_{$1}$0
-endsnippet
 
 context "math()" 
 snippet == "& = " wA
@@ -146,8 +127,14 @@ snippet mk "Math" wA
 $$1$$0
 endsnippet
 
+snippet dm "Math Display" bA 
+$$
+	$1
+$$
+$0 
+endsnippet
 
-snippet dm "align* environment" bA
+snippet EAS "align* environment" bA
 \begin{align*}
 	$0
 \end{align*}
@@ -163,23 +150,27 @@ endsnippet
 
 
 context "math()"
-snippet '([a-z])([\d]) ' "auto subscript" wrA
+snippet '([a-z])([\d])' "auto subscript" wrA
+`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`
+endsnippet
+
+context "math()"
+snippet '([A-Z])([\d])' "auto subscript" wrA
 `!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`$0
 endsnippet
 
 context "math()"
-snippet '([A-Z])([\d]) ' "auto subscript" wrA
-`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`$0
-endsnippet
-
-context "math()"
-snippet '\{([A-Z])\}([\d]) ' "auto subscript" wrA
+snippet '\{([A-Z])\}([\d])' "auto subscript" wrA
 {`!p snip.rv = match.group(1)`}_`!p snip.rv = match.group(2)`$0
 endsnippet
 
+context "math()"
+snippet '([X,Y,Z,x,y,z])([m,n,i,j])' "auto subscript" wr
+`!p snip.rv = match.group(1)`_`!p snip.rv = match.group(2)`$0
+endsnippet
 
 context "math()"
-snippet '([A-Za-z])(\d\d) ' "auto subscript2" wrA
+snippet '([A-Za-z])_(\d\d)' "auto subscript2" wrA
 `!p snip.rv = match.group(1)`_{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
@@ -187,7 +178,7 @@ endsnippet
 
 context "math()" 
 snippet func "function map" 
-$1 : ${2:holder} \mapsto $0 
+$1 : $2 \mapsto $0 
 endsnippet
 
 
@@ -233,7 +224,7 @@ biglist = {}
 biglist['bb'] = ['\\bigl', '\\bigr']
 biglist['BB'] = ['\Bigl', '\Bigr']
 biglist['bbb'] = ['\\biggl', '\\biggr']
-biglist['BBB'] = ['\Biggl', '\Bigger']
+biglist['BBB'] = ['\Biggl', '\Biggr']
 
 
 def checkEqualPara1(arglist):
@@ -249,7 +240,7 @@ def checkEqualPara2(arglist):
 endglobal
 
 context "math()" 
-snippet '(bb|bbb|BB|BBB)([\(\[\{|?<])' "delimiters" wr
+snippet '(bb|bbb|BB|BBB)([\(\[\{|?<])' "delimiters" wrA
 `!p if not snip.c: snip.rv = biglist[match.group(1)][0]``!p if not snip.c: snip.rv = bracklist[match.group(2)][0]`$1`!p if not snip.c: snip.rv = biglist[match.group(1)][1]``!p if not snip.c: snip.rv = bracklist[match.group(2)][1]`$0
 endsnippet
 
@@ -265,6 +256,13 @@ snippet "bb" "begin{} / end{}" br
 	${2:${VISUAL}}
 \end{$1}$0
 endsnippet
+
+snippet "ss" "color shade" br
+:::{.blackbox data-latex=""}
+${1:${VISUAL}}
+:::
+endsnippet
+
 
 context "math()" 
 snippet () "()" iA
@@ -331,31 +329,14 @@ snippet suma "\sum_{}" w
 \sum_{$1}$0
 endsnippet
 
-
-context "math()"
-snippet summ "\sum_{}" w
-\sum_{${1:n = 1}}^{${2:n}} $0 
-endsnippet
-
 snippet envir "add environment" 
 \begin{$1}
 	${VISUAL}
 \end{$1}$0
 endsnippet
 
-context "math()"
 snippet 'epp' "\IE" wr
 \IE \\{$1\\}
-endsnippet
-
-context "math()"
-snippet 'ebb' "\IE" wr
-\IE \bigl\\{$1\bigr\\}
-endsnippet
-
-context "math()"
-snippet 'ebbb' "\IE" wr
-\IE \biggl\\{$1\biggr\\}
 endsnippet
 
 snippet é "item" w
@@ -363,24 +344,47 @@ snippet é "item" w
 endsnippet
 
 
-snippet iid "i.i.d. " w
-i.i.d.\
+snippet 'iid' "i.i.d. " wrA
+i.i.d.\ 
 endsnippet
 
 
 context "math()"
-snippet '([A-Z])(cal|bb|bf|rm|frak|scr)' "\mathcal" wr
-\math`!p snip.rv=match.group(2)`{`!p snip.rv = match.group(1)`}
+snippet '(cal|frak|scr)([A-Z]) ' "\mathcal" wrA
+\math`!p snip.rv=match.group(1)`{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
 context "math()"
-snippet '([A-Z])(hat)' "\hat" wr
-\\`!p snip.rv=match.group(2)`{`!p snip.rv = match.group(1)`}
+snippet 'mbb([A-Z]) ' "\mathbb" wrA
+\mathbb{`!p snip.rv = match.group(1)`}$0
 endsnippet
 
 context "math()"
-snippet '([1a-z])(bf|rm)' "\mathbf mathrm" wr
-\math`!p snip.rv=match.group(2)`{`!p snip.rv = match.group(1)`}$0
+snippet 'hat([A-Z]) ' "\hat" wrA
+\hat{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+context "math()"
+snippet 'mbf([^\s$({]*) ' "\mathbf mathrm" wrA
+\mathbf{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+
+
+context "math()"
+snippet 'mrm([^\s$({]*) ' "\mathbf mathrm" wrA
+\mathrm{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+context "math()"
+snippet 'bm([^\s$({]*) ' "\bm " wrA
+\bm{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+
+context "math()"
+snippet 'ttt([^ \t$({]*) ' "\texttt" wrA
+\\texttt{`!p snip.rv = match.group(1)`}$0
 endsnippet
 
 context "math()"
@@ -404,7 +408,7 @@ snippet ox "otimes" w
 endsnippet
 
 context "math()" 
-snippet intrd "int_{R^d}" wA
+snippet 'intrd' "int_{R^d}" wrA
 \int_{\mathbb{R}^d}
 endsnippet
 
@@ -419,8 +423,8 @@ snippet cite "Description" b
 \cite{$1}$0
 endsnippet
 
-snippet 'Holder ' "Holder" wrA
-H\"{o}lder 
+snippet 'Holder' "Holder" wr
+H\"older$0
 endsnippet
 
 context "math()" 
@@ -433,48 +437,246 @@ snippet 'vert([a-zA-Z])' "add space" irA
 vert `!p if not snip.c: snip.rv = match.group(1)`
 endsnippet
 
+context "math()" 
+snippet ;G "Gamma" iA
+\Gamma
+endsnippet
+
+context "math()" 
+snippet ;D "Delta" iA
+\Delta
+endsnippet
+
+context "math()" 
+snippet ;L "Lambda" iA
+\Lambda
+endsnippet
+
+context "math()" 
+snippet ;F "Phi" iA
+\Phi
+endsnippet
+
+context "math()" 
+snippet ;P "Pi" iA
+\Pi
+endsnippet
+
+context "math()" 
+snippet ;C "Chi" iA
+\Chi
+endsnippet
+
+context "math()" 
+snippet ;S "Sigma" iA
+\Sigma
+endsnippet
+
+context "math()" 
+snippet ;Q "Theta" iA
+\Theta
+endsnippet
+
+context "math()" 
+snippet ;Y "Psi" iA
+\Psi
+endsnippet
+
+context "math()" 
+snippet ;X "Xi" iA
+\Xi
+endsnippet
+
+context "math()" 
+snippet ;W "Omega" iA
+\Omega
+endsnippet
+
+context "math()" 
+snippet ;a "alpha" iA
+\alpha
+endsnippet
+
+context "math()" 
+snippet ;b "beta" iA
+\beta
+endsnippet
+
+context "math()" 
+snippet ;g "gamma" iA
+\gamma
+endsnippet
+
+context "math()" 
+snippet ;d "delta" iA
+\delta
+endsnippet
+
+context "math()" 
+snippet ;e "epsilon" iA
+\epsilon
+endsnippet
+
+context "math()" 
+snippet ;z "zeta" iA
+\zeta
+endsnippet
+
+context "math()" 
+snippet ;h "eta" iA
+\eta
+endsnippet
+
+context "math()" 
+snippet ;u "upsilon" iA
+\upsilon
+endsnippet
+
+context "math()" 
+snippet ;iA "iota" iA
+\iota
+endsnippet
+
+context "math()" 
+snippet ;k "kappa" iA
+\kappa
+endsnippet
+
+context "math()" 
+snippet ;l "lambda" iA
+\lambda
+endsnippet
+
+context "math()" 
+snippet ;m "mu" iA
+\mu
+endsnippet
+
+context "math()" 
+snippet ;n "nu" iA
+\nu
+endsnippet
+
+context "math()" 
+snippet ;j "jota" iA
+\jota
+endsnippet
+
+context "math()" 
+snippet ;p "pi" iA
+\pi
+endsnippet
+
+context "math()" 
+snippet ;r "rho" iA
+\rho
+endsnippet
+
+context "math()" 
+snippet ;s "sigma" iA
+\sigma
+endsnippet
+
+context "math()" 
+snippet ;t "tau" iA
+\tau
+endsnippet
+
+context "math()" 
+snippet ;y "psi" iA
+\psi
+endsnippet
+
+context "math()" 
+snippet ;f "phi" iA
+\phi
+endsnippet
+
+context "math()" 
+snippet ;x "xi" iA
+\xi
+endsnippet
+
+context "math()" 
+snippet ;c "chi" iA
+\chi
+endsnippet
+
+context "math()" 
+snippet ;v "nu" iA
+\nu
+endsnippet
+
+context "math()" 
+snippet ;dg "digamma" iA
+\digamma
+endsnippet
+
+context "math()" 
+snippet ;ve "varepsilon" iA
+\varepsilon
+endsnippet
+
+context "math()" 
+snippet ;vf "varphi" iA
+\varphi
+endsnippet
+
+context "math()" 
+snippet ;vp "varpi" iA
+\varpi
+endsnippet
+
+context "math()" 
+snippet ;vr "varrho" iA
+\varrho
+endsnippet
+
+context "math()" 
+snippet ;vs "varsigma" iA
+\varsigma
+endsnippet
+
+context "math()" 
+snippet ;vq "vartheta" iA
+\vartheta
+endsnippet
+
+context "math()" 
+snippet ;q "theta" iA
+\theta
+endsnippet
 
 context "math()"
-snippet tanh "tanh" w
-\tanh($1)$0
-endsnippet
-
-
-context "math()"
-snippet cosh "cosh" w
-\cosh($1)$0
+snippet bS "\bm Sigma" iA
+\bm{\Sigma}$0
 endsnippet
 
 context "math()"
-snippet sinh "sinh" w
-\sinh($1)$0
+snippet bu "\bm \mu" iA
+\bm{\mu}$0
 endsnippet
 
-context "math()"
-snippet PP "IP" wA
-\IP
+snippet blk "Generate a block" b
+:::{.$1 data-latex="$2"}
+$3
+:::
+
 endsnippet
 
-context "math()"
-snippet 'vsp(\d)' "vspace in cm" wr
-\vspace{`!p snip.rv = match.group(1)`cm}
+snippet def "Generate a def block" b
+:::{.definition data-latex="[$1]"}
+$2
+:::
+
 endsnippet
 
-context "math()"
-snippet 'hsp(\d)' "hspace in cm" wr
-\hspace{`!p snip.rv = match.group(1)`cm}
+snippet -- "Description" wA
+<- 
 endsnippet
 
-context "math()"
-snippet ddd "dots" wA
-\dots
-endsnippet
 
-snippet frame "frame environment" b
-\begin{frame}[t]
-  \frametitle{$1}
-  $0
-\end{frame}
+snippet >> "Description" wA
+%>% 
 endsnippet
-
 # vim:ft=snippets:

@@ -10,7 +10,7 @@ if !has('nvim')
 	set macmeta
 endif
 set spell
-set textwidth=300
+set textwidth=80
 set guifont=Monaco:h18
 set conceallevel=0
 set foldmethod=manual                 " could be marker...
@@ -32,7 +32,7 @@ setlocal spell
 set spelllang=en_us
 " auto check spelling 
 inoremap <A-l> <c-g>u<Esc>[s1z=`]a<c-g>u
-colorscheme southernlights
+
 
 function! SynStack ()
     for i1 in synstack(line("."), col("."))
@@ -43,3 +43,14 @@ function! SynStack ()
     endfor
 endfunction
 map gm :call SynStack()<CR>
+
+function! IsMath()
+  let current_syntax_id_attr = synIDattr(synID(line("."), col("."), 1), "name")
+  return stridx(current_syntax_id_attr, "Math") >= 0
+  " your_string contains "Math"
+endfunction
+
+
+
+
+autocmd InsertEnter * if IsMath() | setlocal iminsert=0 | endif

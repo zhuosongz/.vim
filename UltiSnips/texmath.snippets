@@ -701,6 +701,7 @@ snippet tempad2 "The new template based on Adrian's template" b
 \usepackage{etoolbox} % Use '\AfterEndEnvironment' to avoid indent after theorems
 
 \usepackage{showlabels}
+\usepackage{environ}
 
 \makeatletter
 
@@ -882,10 +883,16 @@ snippet tempad2 "The new template based on Adrian's template" b
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Redefinition 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newenvironment{equ}
-{\begin{equation} \begin{aligned}}
-{\end{aligned} \end{equation}}
-\AfterEndEnvironment{equ}{\noindent\ignorespaces}
+% \newenvironment{equ}
+% {\begin{equation} \begin{aligned}}
+% {\end{aligned} \end{equation}}
+% \AfterEndEnvironment{equ}{\noindent\ignorespaces}
+\NewEnviron{equ}{%
+\begin{equation}\begin{split}
+	\BODY
+\end{split}\end{equation}
+}
+
 
 %% -------------------------
 %% Setting for the enumitem: 

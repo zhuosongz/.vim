@@ -37,33 +37,8 @@ let g:vimtex_compiler_latexmk_engines = {
         \ 'context (xetex)'  : '-pdf -pdflatex=''texexec --xtx''',
         \}
 
-let g:vimtex_syntax_custom_envs = [
-           \ {
-           \   'name': 'equ',
-           \   'math': v:true,
-           \   'starred': v:true
-           \ },
-           \ {
-           \   'name': 'python_code',
-           \   'region': 'texPythonCodeZone',
-           \   'nested': 'python',
-           \ },
-           \ {
-           \   'name': 'code',
-           \   'region': 'texCodeZone',
-           \   'nested': {
-           \     'python': 'language=python',
-           \     'c': 'language=C',
-           \     'rust': 'language=rust',
-           \   },
-           \ },
-           \]
-
-
 let g:vimtex_imaps_leader=';'
-let g:vimtex_imaps_disabled = ['2']
-let g:vimtex_indent_ignored_envs = ['document', 'proof', 'Highlighting', 'Shaded']
-let g:tex_indent_items = 0
+let g:vimtex_indent_ignored_envs = ['document', 'proof']
 
 let g:vimtex_view_general_viewer ='/Applications/Skim.app/Contents/SharedSupport/displayline'
 "'/usr/local/bin/displayline'
